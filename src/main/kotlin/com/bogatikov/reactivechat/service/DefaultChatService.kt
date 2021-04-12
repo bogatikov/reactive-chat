@@ -8,11 +8,10 @@ import com.bogatikov.reactivechat.event.ChatMessageEvent
 import com.bogatikov.reactivechat.event.NewMessageEvent
 import com.bogatikov.reactivechat.event.WebSocketEvent
 import com.bogatikov.reactivechat.handler.SendTo
+import com.bogatikov.reactivechat.messeging.RedisChatMessagePublisher
 import com.bogatikov.reactivechat.repository.ChatRepository
 import com.bogatikov.reactivechat.service.api.ChatService
-import com.bogatikov.reactivechat.util.ObjectStringConverter
 import org.slf4j.Logger
-import org.springframework.data.redis.core.ReactiveStringRedisTemplate
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -25,8 +24,7 @@ class DefaultChatService(
     val logger: Logger,
     val sinkWrapper: SinkWrapper,
     val chatRepository: ChatRepository,
-    val reactiveStringRedisTemplate: ReactiveStringRedisTemplate,
-    val objectStringConverter: ObjectStringConverter
+    val redisChatPublisher: RedisChatMessagePublisher
 ) : ChatService {
 
     override fun handleNewMessageEvent(senderId: UUID, newMessageEvent: NewMessageEvent): Mono<Void> {
@@ -41,15 +39,16 @@ class DefaultChatService(
             .flatMap { broadcastMessage(it.t2) }
     }
 
+    /**
+     * Broadcast the message between instances
+     */
     override fun broadcastMessage(commonMessage: CommonMessage): Mono<Void> {
-        return objectStringConverter.objectToString(commonMessage)
-            .flatMap {
-                logger.info("Broadcast message $it to channel ${CommonMessage::class.java.name}")
-                reactiveStringRedisTemplate.convertAndSend(CommonMessage::class.java.name, it)
-            }
-            .then()
+        return redisChatPublisher.broadcastMessage(commonMessage)
     }
 
+    /**
+     * Send the message to all of chatMembers of message chat direct
+     */
     override fun sendMessage(message: CommonMessage): Mono<Void> {
         return chatRepository.findById(message.chatId)
             .map { it.chatMembers }
