@@ -11,7 +11,7 @@ class JwtUtil(
 ) {
 
     private val secret: String = Base64.getEncoder()
-        .encodeToString("secret-key-from-environment".toByteArray())
+        .encodeToString("14wcjuT4R2GOZ1Bu1YMZ6AjMs5Ffgl8aMtH0wzKNwhtLxM2cZ3gaRNdrv4z9Jo1fQHAI54kamyeJxGOAIFFnvSpCW27BhA9v4Vv6UJPVRqPZwgSxM5bUqLeM".toByteArray())
 
     fun extractUsername(authToken: String): String {
         return getClaimsFromToken(authToken)
