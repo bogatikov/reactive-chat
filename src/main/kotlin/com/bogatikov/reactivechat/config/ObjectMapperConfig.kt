@@ -1,5 +1,7 @@
 package com.bogatikov.reactivechat.config
 
+import com.bogatikov.reactivechat.domain.ImageMessage
+import com.bogatikov.reactivechat.domain.TextMessage
 import com.bogatikov.reactivechat.event.MarkMessageAsRead
 import com.bogatikov.reactivechat.event.NewMessageEvent
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -24,7 +26,9 @@ class ObjectMapperConfig {
         .apply {
             registerSubtypes(
                 NamedType(NewMessageEvent::class.java, "NewMessageEvent"),
-                NamedType(MarkMessageAsRead::class.java, "MarkMessageAsRead")
+                NamedType(MarkMessageAsRead::class.java, "MarkMessageAsRead"),
+                NamedType(TextMessage::class.java, "TextMessage"),
+                NamedType(ImageMessage::class.java, "ImageMessage")
             )
         }
 }
