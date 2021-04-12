@@ -44,14 +44,14 @@ class ChatWebSocketHandler(
                     .doOnNext { m ->
                         logger.info("Message is $m")
                     }
+//                    .doOnNext { messageDirectProcessor.emitNext(SendTo(UUID.randomUUID(), NewMessageEvent(UUID.randomUUID(), it)), Sinks.EmitFailureHandler.FAIL_FAST) }
                     .flatMap {
                         when (val convertedEvent: WebSocketEvent = WebSocketEvent.MAPPER.readValue(it, WebSocketEvent::class.java)) {
-                            is NewMessageEvent -> redisChat.handle(ctx.authentication.details as UUID, convertedEvent)
-                            is MarkMessageAsRead -> redisChat.markPreviousMessagesAsRead(convertedEvent.messageId)
+                            is NewMessageEvent -> chatService.handleNewMessageEvent(ctx.authentication.details as UUID, convertedEvent)
+                            is MarkMessageAsRead -> chatService.markPreviousMessagesAsRead(convertedEvent.messageId)
                             else -> Mono.error(RuntimeException())
                         }
                     }
-                    .doOnNext { messageDirectProcessor.emitNext(SendTo(UUID.randomUUID(), NewMessageEvent(UUID.randomUUID(), it)), Sinks.EmitFailureHandler.FAIL_FAST) }
                     .doOnSubscribe {
                         val userSession = userIdToSession[userId]
                         if (userSession == null) {

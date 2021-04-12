@@ -5,5 +5,6 @@ import reactor.core.publisher.Mono
 import java.util.*
 
 interface ChatService {
-    fun handle(senderId: UUID, newMessageEvent: NewMessageEvent): Mono<Void>
+    fun handleNewMessageEvent(senderId: UUID, newMessageEvent: NewMessageEvent): Mono<Void>
+    fun markPreviousMessagesAsRead(messageId: UUID): Mono<Void>
 }

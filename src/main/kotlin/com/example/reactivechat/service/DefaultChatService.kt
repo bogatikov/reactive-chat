@@ -8,7 +8,11 @@ import java.util.*
 
 @Service
 class DefaultChatService : ChatService {
-    override fun handle(senderId: UUID, newMessageEvent: NewMessageEvent): Mono<Void> {
+    override fun handleNewMessageEvent(senderId: UUID, newMessageEvent: NewMessageEvent): Mono<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun markPreviousMessagesAsRead(messageId: UUID): Mono<Void> {
         TODO("Not yet implemented")
     }
 }
