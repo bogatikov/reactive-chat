@@ -4,6 +4,7 @@ import com.example.reactivechat.event.MarkMessageAsRead
 import com.example.reactivechat.event.NewMessageEvent
 import com.example.reactivechat.event.WebSocketEvent
 import com.example.reactivechat.service.api.ChatService
+import com.example.reactivechat.util.ObjectStringConverter
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.jsonwebtoken.Claims
 import org.slf4j.Logger
@@ -21,7 +22,8 @@ import java.util.concurrent.ConcurrentHashMap
 class ChatWebSocketHandler(
     val objectMapper: ObjectMapper,
     val logger: Logger,
-    val chatService: ChatService
+    val chatService: ChatService,
+    val objectStringConverter: ObjectStringConverter
 ) : WebSocketHandler {
 
     private val userIdToSession: MutableMap<UUID, LinkedList<WebSocketSession>> = ConcurrentHashMap()
@@ -44,14 +46,17 @@ class ChatWebSocketHandler(
                     .doOnNext { m ->
                         logger.info("Message is $m")
                     }
-//                    .doOnNext { messageDirectProcessor.emitNext(SendTo(UUID.randomUUID(), NewMessageEvent(UUID.randomUUID(), it)), Sinks.EmitFailureHandler.FAIL_FAST) }
                     .flatMap {
-                        when (val convertedEvent: WebSocketEvent = WebSocketEvent.MAPPER.readValue(it, WebSocketEvent::class.java)) {
-                            is NewMessageEvent -> chatService.handleNewMessageEvent(ctx.authentication.details as UUID, convertedEvent)
+                        objectStringConverter.stringToObject(it, WebSocketEvent::class.java)
+                    }
+                    .flatMap { convertedEvent ->
+                        when (convertedEvent) {
+                            is NewMessageEvent -> chatService.handleNewMessageEvent(UUID.fromString((ctx.authentication.details as Claims)["id"].toString()), convertedEvent)
                             is MarkMessageAsRead -> chatService.markPreviousMessagesAsRead(convertedEvent.messageId)
                             else -> Mono.error(RuntimeException())
                         }
                     }
+                    .onErrorContinue { t, _ -> logger.error("Error occurred with receiver stream", t) }
                     .doOnSubscribe {
                         val userSession = userIdToSession[userId]
                         if (userSession == null) {
