@@ -1,4 +1,4 @@
-package com.example.reactivechat.util
+package com.bogatikov.reactivechat.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.Logger

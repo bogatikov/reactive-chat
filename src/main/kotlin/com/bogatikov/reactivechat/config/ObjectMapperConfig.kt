@@ -1,7 +1,7 @@
-package com.example.reactivechat.config
+package com.bogatikov.reactivechat.config
 
-import com.example.reactivechat.event.MarkMessageAsRead
-import com.example.reactivechat.event.NewMessageEvent
+import com.bogatikov.reactivechat.event.MarkMessageAsRead
+import com.bogatikov.reactivechat.event.NewMessageEvent
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.jsontype.NamedType

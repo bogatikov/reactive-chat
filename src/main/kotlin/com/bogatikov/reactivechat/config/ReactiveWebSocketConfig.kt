@@ -1,6 +1,6 @@
-package com.example.reactivechat.config
+package com.bogatikov.reactivechat.config
 
-import com.example.reactivechat.handler.ChatWebSocketHandler
+import com.bogatikov.reactivechat.handler.ChatWebSocketHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.cors.CorsConfiguration

@@ -1,6 +1,6 @@
-package com.example.reactivechat.config
+package com.bogatikov.reactivechat.config
 
-import com.example.reactivechat.security.SecurityContextRepository
+import com.bogatikov.reactivechat.security.SecurityContextRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus

@@ -1,6 +1,5 @@
-package com.example.reactivechat.config
+package com.bogatikov.reactivechat.config
 
-import org.slf4j.Logger
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

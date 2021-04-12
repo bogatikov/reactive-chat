@@ -1,4 +1,4 @@
-package com.example.reactivechat.security
+package com.bogatikov.reactivechat.security
 
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.ReactiveAuthenticationManager
