@@ -16,7 +16,7 @@ class RedisListenerStarter(
     @Bean
     fun newMessageEventChannelListenerStarter(): ApplicationRunner {
         return ApplicationRunner { args: ApplicationArguments ->
-            redisChatMessageListener.subscribeNewMessageEventChannelAndPublishOnWebSocket()
+            redisChatMessageListener.subscribeOnCommonMessageTopic()
                 .doOnSubscribe { logger.info("Start NewMessageEvent channel listener") }
                 .onErrorContinue { throwable, _ -> logger.error("Error occurred while listening NewMessageEvent channel", throwable) }
                 .subscribe()

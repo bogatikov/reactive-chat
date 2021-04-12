@@ -19,7 +19,7 @@ class RedisChatMessageListener(
     private val chatService: ChatService
 ) {
 
-    fun subscribeNewMessageEventChannelAndPublishOnWebSocket(): Mono<Void> {
+    fun subscribeOnCommonMessageTopic(): Mono<Void> {
         return reactiveStringRedisTemplate.listenTo(PatternTopic(CommonMessage::class.java.name))
             .map { message -> message.message }
             .doOnNext { logger.info("Receive new message: $it") }
