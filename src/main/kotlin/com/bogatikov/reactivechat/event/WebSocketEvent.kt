@@ -1,4 +1,4 @@
-package com.example.reactivechat.event
+package com.bogatikov.reactivechat.event
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import java.util.*

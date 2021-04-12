@@ -1,6 +1,6 @@
-package com.example.reactivechat.security
+package com.bogatikov.reactivechat.security
 
-import com.example.reactivechat.util.JwtUtil
+import com.bogatikov.reactivechat.util.JwtUtil
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication

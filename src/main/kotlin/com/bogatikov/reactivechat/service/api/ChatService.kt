@@ -1,7 +1,7 @@
-package com.example.reactivechat.service.api
+package com.bogatikov.reactivechat.service.api
 
-import com.example.reactivechat.event.NewMessageEvent
-import com.example.reactivechat.event.WebSocketEvent
+import com.bogatikov.reactivechat.event.NewMessageEvent
+import com.bogatikov.reactivechat.event.WebSocketEvent
 import reactor.core.publisher.Mono
 import java.util.*
 

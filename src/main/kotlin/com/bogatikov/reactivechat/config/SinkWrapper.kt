@@ -1,6 +1,6 @@
-package com.example.reactivechat.config
+package com.bogatikov.reactivechat.config
 
-import com.example.reactivechat.handler.SendTo
+import com.bogatikov.reactivechat.handler.SendTo
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Sinks
 

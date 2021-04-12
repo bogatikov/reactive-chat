@@ -1,10 +1,10 @@
-package com.example.reactivechat.service
+package com.bogatikov.reactivechat.service
 
-import com.example.reactivechat.config.SinkWrapper
-import com.example.reactivechat.event.NewMessageEvent
-import com.example.reactivechat.event.WebSocketEvent
-import com.example.reactivechat.handler.SendTo
-import com.example.reactivechat.service.api.ChatService
+import com.bogatikov.reactivechat.config.SinkWrapper
+import com.bogatikov.reactivechat.event.NewMessageEvent
+import com.bogatikov.reactivechat.event.WebSocketEvent
+import com.bogatikov.reactivechat.handler.SendTo
+import com.bogatikov.reactivechat.service.api.ChatService
 import org.slf4j.Logger
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono

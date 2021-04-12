@@ -1,4 +1,4 @@
-package com.example.reactivechat.util
+package com.bogatikov.reactivechat.util
 
 import io.jsonwebtoken.*
 import org.slf4j.Logger

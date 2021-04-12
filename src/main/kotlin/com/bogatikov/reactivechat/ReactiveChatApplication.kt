@@ -1,4 +1,4 @@
-package com.example.reactivechat
+package com.bogatikov.reactivechat
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
