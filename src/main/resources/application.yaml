@@ -1,0 +1,8 @@
+server:
+  port: 0
+
+spring:
+  redis:
+    host: ${REDIS_SERVER_URL:localhost}
+    port: 6379
+    password: SecretPasswordForRedis
