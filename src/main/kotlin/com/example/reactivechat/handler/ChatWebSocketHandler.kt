@@ -1,5 +1,6 @@
 package com.example.reactivechat.handler
 
+import com.example.reactivechat.config.SinkWrapper
 import com.example.reactivechat.event.MarkMessageAsRead
 import com.example.reactivechat.event.NewMessageEvent
 import com.example.reactivechat.event.WebSocketEvent
@@ -23,35 +24,31 @@ class ChatWebSocketHandler(
     val objectMapper: ObjectMapper,
     val logger: Logger,
     val chatService: ChatService,
-    val objectStringConverter: ObjectStringConverter
+    val objectStringConverter: ObjectStringConverter,
+    val sinkWrapper: SinkWrapper
 ) : WebSocketHandler {
 
     private val userIdToSession: MutableMap<UUID, LinkedList<WebSocketSession>> = ConcurrentHashMap()
-
-    private val messageDirectProcessor: Sinks.Many<SendTo> = Sinks.many().multicast().onBackpressureBuffer()
 
     override fun handle(session: WebSocketSession): Mono<Void> {
         return ReactiveSecurityContextHolder.getContext()
             .flatMap { ctx ->
                 val userId = UUID.fromString((ctx.authentication.details as Claims)["id"].toString())
-                val sendMessage = messageDirectProcessor.asFlux()
+                val sendMessage = sinkWrapper.sinks.asFlux()
                     .filter { sendTo -> sendTo.userId == userId }
-                    .map { sendTo -> objectMapper.writeValueAsString(sendTo) }
+                    .map { sendTo -> objectMapper.writeValueAsString(sendTo.event) }
                     .map { stringObject -> session.textMessage(stringObject) }
                     .doOnError { logger.error("", it) }
                 val sender = session.send(sendMessage)
                 val receiver = session.receive()
                     .filter { it.type == WebSocketMessage.Type.TEXT }
                     .map(WebSocketMessage::getPayloadAsText)
-                    .doOnNext { m ->
-                        logger.info("Message is $m")
-                    }
                     .flatMap {
                         objectStringConverter.stringToObject(it, WebSocketEvent::class.java)
                     }
                     .flatMap { convertedEvent ->
                         when (convertedEvent) {
-                            is NewMessageEvent -> chatService.handleNewMessageEvent(UUID.fromString((ctx.authentication.details as Claims)["id"].toString()), convertedEvent)
+                            is NewMessageEvent -> chatService.handleNewMessageEvent(userId, convertedEvent)
                             is MarkMessageAsRead -> chatService.markPreviousMessagesAsRead(convertedEvent.messageId)
                             else -> Mono.error(RuntimeException())
                         }
@@ -74,7 +71,6 @@ class ChatWebSocketHandler(
                 return@flatMap Mono.zip(sender, receiver).then()
             }
     }
-
 }
 
 data class SendTo(
